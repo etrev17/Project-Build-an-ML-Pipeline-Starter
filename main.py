@@ -22,7 +22,6 @@ _steps = [
 # This automatically reads in the configuration
 @hydra.main(config_name='config')
 def go(config: DictConfig):
-
     # Setup the wandb experiment. All runs will be grouped under this name
     os.environ["WANDB_PROJECT"] = config["main"]["project_name"]
     os.environ["WANDB_RUN_GROUP"] = config["main"]["experiment_name"]
@@ -53,7 +52,7 @@ def go(config: DictConfig):
             # Run the basic_cleaning step
             mlflow.run(
                 os.path.join(hydra.utils.get_original_cwd(), "src", "basic_cleaning"),
-        entry_point="main",       
+                entry_point="main",       
                 parameters={
                     "input_artifact": "sample.csv:latest",
                     "output_artifact": "clean_sample.csv",
@@ -66,7 +65,7 @@ def go(config: DictConfig):
         if "data_check" in active_steps:
             # Run the data_check step
             mlflow.run(
-                "src/data_check",
+                os.path.join(hydra.utils.get_original_cwd(), "src", "data_check"),
                 entry_point="main",
                 parameters={
                     "csv": "clean_sample.csv:latest",
@@ -82,7 +81,6 @@ def go(config: DictConfig):
             pass
 
         if "train_random_forest" in active_steps:
-
             # Serialize the random forest configuration into JSON
             rf_config = os.path.abspath("rf_config.json")
             with open(rf_config, "w+") as fp:
@@ -90,14 +88,14 @@ def go(config: DictConfig):
 
             # Run the train_random_forest step
             mlflow.run(
-                "src/train_random_forest",
+                os.path.join(hydra.utils.get_original_cwd(), "src", "train_random_forest"),
                 entry_point="main",
                 parameters={
                     "trainval_artifact": "trainval_data.csv:latest",
                     "rf_config": rf_config,
                     "output_artifact": "random_forest_export",
                     "output_type": "model_export",
-                    "output_description": "Trained Random Forest model"
+                    "output_description": config["main"].get("output_description", "Trained Random Forest model")  # Use config value
                 },
             )
 

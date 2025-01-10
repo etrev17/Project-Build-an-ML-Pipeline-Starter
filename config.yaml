@@ -3,6 +3,7 @@ main:
   project_name: nyc_airbnb
   experiment_name: development
   steps: all
+  output_description: "The output is the cleaned dataset and model predictions for short-term rental prices in NYC."
 
 etl:
   sample: "sample1.csv"
