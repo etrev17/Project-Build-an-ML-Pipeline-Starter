@@ -57,6 +57,7 @@ def go(config: DictConfig):
                     "input_artifact": "sample.csv:latest",
                     "output_artifact": "clean_sample.csv",
                     "output_type": "cleaned_data",
+                    "output_description": "Data with basic cleaning steps on outliers and null values",
                     "min_price": config["basic_cleaning"]["min_price"],
                     "max_price": config["basic_cleaning"]["max_price"]
                 },
@@ -86,18 +87,17 @@ def go(config: DictConfig):
             with open(rf_config, "w+") as fp:
                 json.dump(dict(config["modeling"]["random_forest"].items()), fp)  # DO NOT TOUCH
 
-            # Run the train_random_forest step
-            mlflow.run(
-                os.path.join(hydra.utils.get_original_cwd(), "src", "train_random_forest"),
-                entry_point="main",
-                parameters={
-                    "trainval_artifact": "trainval_data.csv:latest",
-                    "rf_config": rf_config,
-                    "output_artifact": "random_forest_export",
-                    "output_type": "model_export",
-                    "output_description": config["main"].get("output_description", "Trained Random Forest model")  # Use config value
-                },
-            )
+        # Run the train_random_forest step
+        mlflow.run(
+            os.path.join(hydra.utils.get_original_cwd(), "src", "train_random_forest"),
+            entry_point="main",
+            parameters={
+                "trainval_artifact": "trainval_data.csv:latest",
+                "rf_config": rf_config,
+                "output_artifact": "random_forest_export",
+                "output_type": "model_export",
+            },
+)
 
         if "test_regression_model" in active_steps:
             # Implement test_regression_model step
