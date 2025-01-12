@@ -9,6 +9,7 @@ dependencies:
   - hydra-core
   - pip=23.3.1
   - scipy=1.13.1 
+  - pytest=7.4.4
   - pip:
       - mlflow==2.8.1
       - wandb==0.16.0
