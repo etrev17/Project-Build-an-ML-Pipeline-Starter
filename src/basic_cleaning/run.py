@@ -68,7 +68,7 @@ if __name__ == "__main__":
     parser.add_argument(
         "--output_type", 
         type = str,
-        help = ## INSERT DESCRIPTION HERE,
+        help = "the type of output",
         required = True
     )
 
