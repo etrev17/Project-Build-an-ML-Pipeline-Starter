@@ -103,6 +103,7 @@ def go(args):
     #Old code    input_example = X_train.iloc[:5]
     #Old code)
     ######################################
+    signature = mlflow.models.infer_signature(X_val, y_pred)
     mlflow.sklearn.save_model(
         sk_pipe,
         path="random_forest_dir",
