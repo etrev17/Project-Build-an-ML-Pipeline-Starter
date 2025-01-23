@@ -76,6 +76,7 @@ def go(args):
     # YOUR CODE HERE
     ######################################
 
+    sk_pipe.fit(X_train, y_train)
     # Compute r2 and MAE
     logger.info("Scoring")
     r_squared = sk_pipe.score(X_val, y_val)
@@ -95,14 +96,19 @@ def go(args):
     ######################################
     # Save the sk_pipe pipeline as a mlflow.sklearn model in the directory "random_forest_dir"
     # HINT: use mlflow.sklearn.save_model
-    signature = mlflow.models.infer_signature(X_val, y_pred)
-    mlflow.sklearn.save_model(
+   #Old code signature = mlflow.models.infer_signature(X_val, y_pred)
+   #Old code mlflow.sklearn.save_model(
         # YOUR CODE HERE
-        signature = signature,
-        input_example = X_train.iloc[:5]
-    )
+    #Old code    signature = signature,
+    #Old code    input_example = X_train.iloc[:5]
+    #Old code)
     ######################################
-
+    mlflow.sklearn.save_model(
+        sk_pipe,
+        path="random_forest_dir",
+        signature=signature,
+        input_example=X_train.iloc[:5]
+    )
 
     # Upload the model we just exported to W&B
     artifact = wandb.Artifact(
@@ -119,11 +125,12 @@ def go(args):
 
     ######################################
     # Here we save variable r_squared under the "r2" key
-    run.summary['r2'] = r_squared
+    #old code run.summary['r2'] = r_squared
     # Now save the variable mae under the key "mae".
     # YOUR CODE HERE
     ######################################
-
+    run.summary['mae'] = mae
+    
     # Upload to W&B the feture importance visualization
     run.log(
         {
@@ -163,11 +170,14 @@ def get_inference_pipeline(rf_config, max_tfidf_features):
     # Build a pipeline with two steps:
     # 1 - A SimpleImputer(strategy="most_frequent") to impute missing values
     # 2 - A OneHotEncoder() step to encode the variable
-    non_ordinal_categorical_preproc = make_pipeline(
+    #old code non_ordinal_categorical_preproc = make_pipeline(
         # YOUR CODE HERE
-    )
+   #old code )
     ######################################
-
+    non_ordinal_categorical_preproc = make_pipeline(
+        SimpleImputer(strategy="most_frequent"),
+        OrdinalEncoder()
+    )
     # Let's impute the numerical columns to make sure we can handle missing values
     # (note that we do not scale because the RF algorithm does not need that)
     zero_imputed = [
@@ -227,7 +237,8 @@ def get_inference_pipeline(rf_config, max_tfidf_features):
 
     sk_pipe = Pipeline(
         steps =[
-        # YOUR CODE HERE
+            ("preprocessor", preprocessor),
+            ("random_forest", random_forest)
         ]
     )
 
