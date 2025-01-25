@@ -96,19 +96,14 @@ def go(args):
     ######################################
     # Save the sk_pipe pipeline as a mlflow.sklearn model in the directory "random_forest_dir"
     # HINT: use mlflow.sklearn.save_model
-   #Old code signature = mlflow.models.infer_signature(X_val, y_pred)
-   #Old code mlflow.sklearn.save_model(
-        # YOUR CODE HERE
-    #Old code    signature = signature,
-    #Old code    input_example = X_train.iloc[:5]
-    #Old code)
-    ######################################
-    
     mlflow.sklearn.save_model(
         sk_pipe,
-        path="random_forest_dir",
+        "random_forest_dir",
         input_example=X_train.iloc[:5]
     )
+    ######################################
+    
+   
 
     # Upload the model we just exported to W&B
     artifact = wandb.Artifact(
