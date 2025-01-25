@@ -124,6 +124,7 @@ def go(args):
     # Now save the variable mae under the key "mae".
     # YOUR CODE HERE
     ######################################
+    run.summary['r2'] = r_squared
     run.summary['mae'] = mae
     
     # Upload to W&B the feture importance visualization
