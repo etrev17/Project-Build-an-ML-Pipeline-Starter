@@ -187,4 +187,4 @@ LINKS
 
 https://github.com/etrev17/Project-Build-an-ML-Pipeline-Starter
 
-[https://api.wandb.ai/links/etrev17-western-governors-university/ez86ek1v](https://api.wandb.ai/links/etrev17-western-governors-university/smnw7cw7)
+https://api.wandb.ai/links/etrev17-western-governors-university/8ptf13t8
